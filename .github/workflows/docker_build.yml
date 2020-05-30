@@ -1,0 +1,25 @@
+name: Build Docker Images
+
+on: push
+
+jobs:
+  qbs-clang:
+    name: "Qbs + Clang"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v1
+        with:
+          target: qbs-clang
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: arbmind/qbs-clang
+          tags: |
+            clang10,
+            qbs1.16.0
+          build_args: |
+            DISTRO=focal,
+            CLANG_MAJOR=10,
+            QT_MAJOR=514,
+            QT_VERSION=5.14.2,
+            QBS_BRANCH=v1.16.0
