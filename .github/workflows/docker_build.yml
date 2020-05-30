@@ -2,24 +2,39 @@ name: Build Docker Images
 
 on: push
 
+env:
+  DISTRO: focal
+  QBS_BRANCH: v1.16.0
+  QT_MAJOR: "514"
+  QT_VERSION: "5.14.2"
+
 jobs:
   qbs-clang:
     name: "Qbs + Clang"
+    strategy:
+      fail-fast: false
+      matrix:
+        clang_major: [8, 9, 10]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: docker/build-push-action@v1
+
+      - name: Clang${{ matrix.clang_major }} + Qbs ${{ env.QBS_BRANCH }}
+        uses: docker/build-push-action@v1
         with:
           target: qbs-clang
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: arbmind/qbs-clang
-          tags: |
-            clang10,
-            qbs1.16.0
-          build_args: |
-            DISTRO=focal,
-            CLANG_MAJOR=10,
-            QT_MAJOR=514,
-            QT_VERSION=5.14.2,
-            QBS_BRANCH=v1.16.0
+          repository: arbmind/qbs-clang${{ matrix.clang_major }}
+          tags: qbs_${{ env.QBS_BRANCH }}
+          build_args: DISTRO=${{ env.DISTRO }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}
+
+      - name: Clang${{ matrix.clang_major }} + Qt ${{ env.QT_VERSION }} + Qbs ${{ env.QBS_BRANCH }}
+        uses: docker/build-push-action@v1
+        with:
+          target: qbs-clang-qt
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: arbmind/qbs-clang${{ matrix.clang_major }}-qt${{ env.QT_MAJOR }}
+          tags: qbs_${{ env.QBS_BRANCH }}
+          build_args: DISTRO=${{ env.DISTRO }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}

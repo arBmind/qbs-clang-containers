@@ -10,7 +10,11 @@ Some variants alos contain some qt module.
 Use it like qbs command line.
 
 ```bash
-docker run -it --mount src="$(pwd)",target=/build,type=bind -w /build qbs-clang:latest build -d /tmp/qbs -p autotest-runner
+docker run -it \
+    --mount src="$(pwd)",target=/build,type=bind \
+    -w /build \
+    qbs-clang10:latest \
+    build -d /tmp/qbs -p autotest-runner
 ```
 
 This mounts your current directory to `/build` in the container. Changes the workdir to `/build` and runs qbs with build path `/tmp/qbs` and targets the `autotest-runner`.
