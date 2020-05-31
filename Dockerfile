@@ -22,7 +22,7 @@ ENV \
 # install Clang (https://apt.llvm.org/)
 RUN \
   apt-get update --quiet \
-  && apt-get install --yes --quiet --no-install-recommends wget gnupg ca-certificates \
+  && apt-get install --yes --quiet --no-install-recommends wget gnupg apt-transport-https ca-certificates \
   && wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
   && echo "deb http://apt.llvm.org/${DISTRO}/ llvm-toolchain-${DISTRO}-${CLANG_MAJOR} main" > /etc/apt/sources.list.d/llvm.list \
   && apt-get update --quiet \
