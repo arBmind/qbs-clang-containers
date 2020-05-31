@@ -16,13 +16,10 @@ jobs:
         include:
           - clang_major: 8
             distro: xenial
-            runtime_apt: "libicu55 libglib2.0-0"
           - clang_major: 9
             distro: focal
-            runtime_apt: "libicu66 libglib2.0-0 libpcre2-16-0"
           - clang_major: 10
             distro: focal
-            runtime_apt: "libicu66 libglib2.0-0 libpcre2-16-0"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +32,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: arbmind/qbs-clang${{ matrix.clang_major }}
           tags: qbs_${{ env.QBS_BRANCH }}
-          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }},RUNTIME_APT=${{ matrix.runtime_apt }}
+          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}
 
       - name: Clang${{ matrix.clang_major }} + Qt ${{ env.QT_VERSION }} + Qbs ${{ env.QBS_BRANCH }}
         uses: docker/build-push-action@v1
@@ -45,4 +42,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: arbmind/qbs-clang${{ matrix.clang_major }}-qt${{ env.QT_MAJOR }}
           tags: qbs_${{ env.QBS_BRANCH }}
-          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }},RUNTIME_APT=${{ matrix.runtime_apt }}
+          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}

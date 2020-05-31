@@ -7,7 +7,9 @@ ARG CLANG_MAJOR=10
 ARG QT_MAJOR=514
 ARG QT_VERSION=5.14.2
 ARG QBS_BRANCH=v1.16.0
-ARG RUNTIME_APT="libicu66 libglib2.0-0 libpcre2-16-0"
+ARG RUNTIME_APT
+ARG RUNTIME_XENIAL="libicu55 libglib2.0-0"
+ARG RUNTIME_FOCAL="libicu66 libglib2.0-0 libpcre2-16-0"
 
 FROM ubuntu:${DISTRO} AS clang_base
 ARG DISTRO
@@ -94,6 +96,8 @@ ARG CLANG_MAJOR
 ARG QT_MAJOR
 ARG QBS_BRANCH
 ARG RUNTIME_APT
+ARG RUNTIME_FOCAL
+ARG RUNTIME_XENIAL
 
 LABEL Description="Ubuntu ${DISTRO} - Clang${CLANG_MAJOR} + Qbs ${QBS_BRANCH}"
 
@@ -106,7 +110,11 @@ ENV \
 
 RUN \
   apt-get update --quiet \
-  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT} \
+  && if [ "${RUNTIME_APT}" != "" ] ; then export "RUNTIME_APT2=${RUNTIME_APT}" ; \
+  elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
+  else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
+  fi \
+  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT2} \
   && apt-get --yes autoremove \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/* \
@@ -124,6 +132,8 @@ ARG QT_MAJOR
 ARG QT_VERSION
 ARG QBS_BRANCH
 ARG RUNTIME_APT
+ARG RUNTIME_FOCAL
+ARG RUNTIME_XENIAL
 
 LABEL Description="Ubuntu ${DISTRO} - Clang${CLANG_MAJOR} + Qt ${QT_VERSION} + Qbs ${QBS_BRANCH}"
 
@@ -137,7 +147,11 @@ ENV \
 
 RUN \
   apt-get update --quiet \
-  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT} \
+  && if [ "${RUNTIME_APT}" != "" ] ; then export "RUNTIME_APT2=${RUNTIME_APT}" ; \
+  elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
+  else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
+  fi \
+  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT2} \
   && apt-get --yes autoremove \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/* \
