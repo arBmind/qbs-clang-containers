@@ -83,7 +83,8 @@ RUN \
   QBS_INSTALL_PREFIX=/opt/qbs \
   CONFIG+=qbs_no_dev_install \
   CONFIG+=release CONFIG-=debug \
-  && make -j install \
+  && make -j \
+  && make install \
   && rm -rf /opt/qbs-src
 
 # final qbs-clang (no Qt)
