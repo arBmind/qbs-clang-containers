@@ -119,6 +119,7 @@ RUN \
   && qbs config defaultProfile clang \
   && qbs config --list
 
+WORKDIR /build
 ENTRYPOINT ["/opt/qbs/bin/qbs"]
 
 # final qbs-clang-qt (with Qt)
@@ -157,4 +158,5 @@ RUN \
   && qbs config defaultProfile qt${QT_MAJOR} \
   && qbs config --list
 
+WORKDIR /build
 ENTRYPOINT ["/opt/qbs/bin/qbs"]
