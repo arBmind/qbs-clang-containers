@@ -3,7 +3,7 @@
 This docker image is used to run continuious integrations and local builds with the Qbs build system.
 
 The image contains a clang as the main compiler.
-Some variants alos contain some qt module.
+The qt variants also contain some qt module.
 
 ## Usage
 
