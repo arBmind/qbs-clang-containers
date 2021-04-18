@@ -3,9 +3,9 @@ name: Build Docker Images
 on: push
 
 env:
-  QBS_BRANCH: v1.17.0
+  QBS_BRANCH: v1.18.0
   QT_MAJOR: "515"
-  QT_VERSION: "5.15.0"
+  QT_VERSION: "5.15.2"
 
 jobs:
   qbs-clang:
@@ -21,6 +21,8 @@ jobs:
           - clang_major: 10
             distro: focal
           - clang_major: 11
+            distro: focal
+          - clang_major: 12
             distro: focal
     runs-on: ubuntu-latest
     steps:

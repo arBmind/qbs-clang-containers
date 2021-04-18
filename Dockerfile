@@ -22,17 +22,21 @@ ENV \
   LC_ALL=C.UTF-8
 
 # install Clang (https://apt.llvm.org/)
-RUN \
-  apt-get update --quiet \
-  && apt-get install --yes --quiet --no-install-recommends wget gnupg apt-transport-https ca-certificates \
+RUN apt-get update --quiet \
+  && apt-get upgrade --yes --quiet \
+  && apt-get install --yes --quiet --no-install-recommends \
+    wget \
+    gnupg \
+    apt-transport-https \
+    ca-certificates \
   && wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
   && echo "deb http://apt.llvm.org/${DISTRO}/ llvm-toolchain-${DISTRO}-${CLANG_MAJOR} main" > /etc/apt/sources.list.d/llvm.list \
   && apt-get update --quiet \
   && apt-get install --yes --quiet --no-install-recommends \
-  clang-${CLANG_MAJOR} \
-  lld-${CLANG_MAJOR} \
-  libc++abi-${CLANG_MAJOR}-dev \
-  libc++-${CLANG_MAJOR}-dev \
+    clang-${CLANG_MAJOR} \
+    lld-${CLANG_MAJOR} \
+    libc++abi-${CLANG_MAJOR}-dev \
+    libc++-${CLANG_MAJOR}-dev \
   && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${CLANG_MAJOR} 100 \
   && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${CLANG_MAJOR} 100 \
   && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_MAJOR} 100 \
@@ -63,12 +67,12 @@ RUN \
   && echo "deb http://ppa.launchpad.net/beineri/opt-qt-${QT_VERSION}-${DISTRO}/ubuntu ${DISTRO} main" > /etc/apt/sources.list.d/qt.list \
   && apt-get update --quiet \
   && apt-get install --yes --quiet --no-install-recommends \
-  git \
-  make \
-  libgl1-mesa-dev \
-  qt${QT_MAJOR}script \
-  qt${QT_MAJOR}base \
-  qt${QT_MAJOR}tools \
+    git \
+    make \
+    libgl1-mesa-dev \
+    qt${QT_MAJOR}script \
+    qt${QT_MAJOR}base \
+    qt${QT_MAJOR}tools \
   && apt-get --yes autoremove \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
@@ -106,13 +110,13 @@ ENV \
   PATH=/opt/qbs/bin:${PATH} \
   LD_LIBRARY_PATH=/opt/qt${QT_MAJOR}/lib/x86_64-linux-gnu:/opt/qt${QT_MAJOR}/lib:${LD_LIBRARY_PATH}
 
-RUN \
-  apt-get update --quiet \
+RUN apt-get update --quiet \
   && if [ "${RUNTIME_APT}" != "" ] ; then export "RUNTIME_APT2=${RUNTIME_APT}" ; \
-  elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
-  else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
-  fi \
-  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT2} \
+    elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
+    else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
+    fi \
+  && apt-get install --yes --quiet --no-install-recommends \
+    ${RUNTIME_APT2} \
   && apt-get --yes autoremove \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/* \
@@ -144,13 +148,13 @@ ENV \
   LD_LIBRARY_PATH=/opt/qt${QT_MAJOR}/lib/x86_64-linux-gnu:/opt/qt${QT_MAJOR}/lib:${LD_LIBRARY_PATH} \
   PKG_CONFIG_PATH=/opt/qt${QT_MAJOR}/lib/pkgconfig:${PKG_CONFIG_PATH}
 
-RUN \
-  apt-get update --quiet \
+RUN apt-get update --quiet \
   && if [ "${RUNTIME_APT}" != "" ] ; then export "RUNTIME_APT2=${RUNTIME_APT}" ; \
-  elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
-  else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
-  fi \
-  && apt-get install --yes --quiet --no-install-recommends ${RUNTIME_APT2} \
+    elif [ "${DISTRO}" = "xenial" ] ; then export "RUNTIME_APT2=${RUNTIME_XENIAL}" ; \
+    else export "RUNTIME_APT2=${RUNTIME_FOCAL}" ; \
+    fi \
+  && apt-get install --yes --quiet --no-install-recommends \
+    ${RUNTIME_APT2} \
   && apt-get --yes autoremove \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/* \
