@@ -28,22 +28,42 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Clang${{ matrix.clang_major }} + Qbs ${{ env.QBS_BRANCH }}
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           target: qbs-clang
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: arbmind/qbs-clang${{ matrix.clang_major }}
-          tags: latest,qbs_${{ env.QBS_BRANCH }}
-          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            arbmind/qbs-clang${{ matrix.clang_major }}:latest
+            arbmind/qbs-clang${{ matrix.clang_major }}:qbs_${{ env.QBS_BRANCH }}
+          build-args: |
+            DISTRO=${{ matrix.distro }}
+            CLANG_MAJOR=${{ matrix.clang_major }}
+            QT_MAJOR=${{ env.QT_MAJOR }}
+            QT_VERSION=${{ env.QT_VERSION }}
+            QBS_BRANCH=${{ env.QBS_BRANCH }}
 
       - name: Clang${{ matrix.clang_major }} + Qt ${{ env.QT_VERSION }} + Qbs ${{ env.QBS_BRANCH }}
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           target: qbs-clang-qt
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: arbmind/qbs-clang${{ matrix.clang_major }}-qt${{ env.QT_MAJOR }}
-          tags: latest,qbs_${{ env.QBS_BRANCH }}
-          build_args: DISTRO=${{ matrix.distro }},CLANG_MAJOR=${{ matrix.clang_major }},QT_MAJOR=${{ env.QT_MAJOR }},QT_VERSION=${{ env.QT_VERSION }},QBS_BRANCH=${{ env.QBS_BRANCH }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            arbmind/qbs-clang${{ matrix.clang_major }}-qt${{ env.QT_MAJOR }}:latest
+            arbmind/qbs-clang${{ matrix.clang_major }}-qt${{ env.QT_MAJOR }}:qbs_${{ env.QBS_BRANCH }}
+          build-args: |
+            DISTRO=${{ matrix.distro }}
+            CLANG_MAJOR=${{ matrix.clang_major }}
+            QT_MAJOR=${{ env.QT_MAJOR }}
+            QT_VERSION=${{ env.QT_VERSION }}
+            QBS_BRANCH=${{ env.QBS_BRANCH }}
