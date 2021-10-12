@@ -3,7 +3,7 @@ name: Build Docker Images
 on: push
 
 env:
-  QBS_BRANCH: v1.18.0
+  QBS_BRANCH: v1.20.1
   QT_MAJOR: "515"
   QT_VERSION: "5.15.2"
 
