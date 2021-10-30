@@ -37,6 +37,7 @@ RUN apt-get update --quiet \
     lld-${CLANG_MAJOR} \
     libc++abi-${CLANG_MAJOR}-dev \
     libc++-${CLANG_MAJOR}-dev \
+    $( [ $CLANG_MAJOR -ge 12 ] && echo "libunwind-${CLANG_MAJOR}-dev" ) \
   && update-alternatives --install /usr/bin/cc cc /usr/bin/clang-${CLANG_MAJOR} 100 \
   && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-${CLANG_MAJOR} 100 \
   && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_MAJOR} 100 \
@@ -82,11 +83,11 @@ RUN \
   && git clone --depth 1 -b ${QBS_BRANCH} https://github.com/qbs/qbs.git qbs-src \
   && cd /opt/qbs-src \
   && qmake -r qbs.pro \
-  -spec linux-clang-libc++ \
-  LIBS+=-lc++abi \
-  QBS_INSTALL_PREFIX=/opt/qbs \
-  CONFIG+=qbs_no_dev_install \
-  CONFIG+=release CONFIG-=debug \
+    -spec linux-clang-libc++ \
+    LIBS+=-lc++abi \
+    QBS_INSTALL_PREFIX=/opt/qbs \
+    CONFIG+=qbs_no_dev_install \
+    CONFIG+=release CONFIG-=debug \
   && make -j \
   && make install \
   && rm -rf /opt/qbs-src
