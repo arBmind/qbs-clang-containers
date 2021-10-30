@@ -24,6 +24,8 @@ jobs:
             distro: focal
           - clang_major: 12
             distro: focal
+          - clang_major: 13
+            distro: focal
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
