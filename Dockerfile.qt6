@@ -5,6 +5,9 @@ ARG QT_VERSION=6.2.2
 ARG QT_ABI=gcc_64
 # Qbs requires qt5compat to be built with Qt6
 ARG QT_MODULES="qt5compat"
+# Set QBS_BIN_URL skips qbs build and downloads and extracts release
+ARG QBS_BIN_URL=""
+ARG QBS_GIT="https://github.com/qbs/qbs.git"
 ARG QBS_BRANCH=v1.21.0
 ARG QBS_QMAKE_ARGS="-spec linux-clang"
 # ARG QBS_QMAKE_ARGS="-spec linux-clang-libc++ LIBS+=-lc++abi" # requires qt built with libc++ after Qt6
@@ -57,6 +60,8 @@ ARG DISTRO
 ARG QT_VERSION
 ARG QT_ABI
 ARG QT_MODULES
+ARG QBS_BIN_URL
+ARG QBS_GIT
 ARG QBS_BRANCH
 ARG QBS_QMAKE_ARGS
 
@@ -85,18 +90,21 @@ RUN \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
 RUN \
-  cd /opt \
-  && git clone --recurse-submodules --depth 1 -b ${QBS_BRANCH} https://github.com/qbs/qbs.git qbs-src \
-  && cd /opt/qbs-src \
-  && qmake -r qbs.pro ${QBS_QMAKE_ARGS} \
-    QBS_INSTALL_PREFIX=/opt/qbs \
-    CONFIG+=nomake_tests \
-    CONFIG+=qbs_no_dev_install \
-    CONFIG+=release CONFIG-=debug \
-  && make \
-  && make install \
-  && rm -rf /opt/qbs-src
-
+  if [ "${QBS_BIN_URL}" != "" ] ; then \
+    mkdir -p /opt/qbs \
+    && wget -qO - ${QBS_BIN_URL} | tar -xz -C /opt/qbs --strip-components=1 \
+  ; else \
+    git clone --recurse-submodules --depth 1 -b ${QBS_BRANCH} ${QBS_GIT} /opt/qbs-src \
+    && cd /opt/qbs-src \
+    && qmake -r qbs.pro ${QBS_QMAKE_ARGS} \
+      QBS_INSTALL_PREFIX=/opt/qbs \
+      CONFIG+=nomake_tests \
+      CONFIG+=qbs_no_dev_install \
+      CONFIG+=release CONFIG-=debug \
+    && make \
+    && make install \
+    && rm -rf /opt/qbs-src \
+  ; fi
 
 # final qbs-clang (no Qt)
 FROM clang_base AS qbs-clang

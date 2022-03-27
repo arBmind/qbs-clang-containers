@@ -17,12 +17,18 @@ jobs:
         include:
           - clang_major: 11
             distro: focal
+            qbs_bin_url: ''
           - clang_major: 12
             distro: focal
+            qbs_bin_url: ''
+          # note: clang 13+ cannot compile the legacy Qt script module correctly. The Qbs binary crashes.
           - clang_major: 13
             distro: focal
+            qbs_bin_url: 'https://download.qt.io/official_releases/qbs/1.21.0/qbs-linux-x86_64-1.21.0.tar.gz'
           - clang_major: 14
             distro: focal
+            qbs_bin_url: 'https://download.qt.io/official_releases/qbs/1.21.0/qbs-linux-x86_64-1.21.0.tar.gz'
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,6 +57,7 @@ jobs:
             CLANG_MAJOR=${{ matrix.clang_major }}
             QT_MAJOR=${{ env.QT_MAJOR }}
             QT_VERSION=${{ env.QT_VERSION }}
+            QBS_BIN_URL=${{ matrix.qbs_bin_url }}
             QBS_BRANCH=${{ env.QBS_BRANCH }}
 
       - name: Clang${{ matrix.clang_major }} + Qt ${{ env.QT_VERSION }} + Qbs ${{ env.QBS_BRANCH }}
@@ -67,4 +74,5 @@ jobs:
             CLANG_MAJOR=${{ matrix.clang_major }}
             QT_MAJOR=${{ env.QT_MAJOR }}
             QT_VERSION=${{ env.QT_VERSION }}
+            QBS_BIN_URL=${{ matrix.qbs_bin_url }}
             QBS_BRANCH=${{ env.QBS_BRANCH }}
