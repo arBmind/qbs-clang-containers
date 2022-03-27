@@ -50,6 +50,7 @@ RUN apt-get update --quiet \
   && apt-get clean autoclean \
   && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
+
 # compile & install Qbs
 FROM clang_base AS qbs-build
 ARG DISTRO
@@ -96,6 +97,7 @@ RUN \
   && make install \
   && rm -rf /opt/qbs-src
 
+
 # final qbs-clang (no Qt)
 FROM clang_base AS qbs-clang
 ARG DISTRO
@@ -126,6 +128,7 @@ RUN apt-get update --quiet \
 
 WORKDIR /build
 ENTRYPOINT ["/opt/qbs/bin/qbs"]
+
 
 # final qbs-clang-qt (with Qt)
 FROM clang_base AS qbs-clang-qt

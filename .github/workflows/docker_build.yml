@@ -5,7 +5,7 @@ on: push
 env:
   QBS_BRANCH: v1.21.0
   QT_MAJOR: "62"
-  QT_VERSION: "6.2.2"
+  QT_VERSION: "6.2.4"
   DOCKER_FILE: "Dockerfile.qt6"
 
 jobs:
@@ -20,6 +20,8 @@ jobs:
           - clang_major: 12
             distro: focal
           - clang_major: 13
+            distro: focal
+          - clang_major: 14
             distro: focal
     runs-on: ubuntu-latest
     steps:
